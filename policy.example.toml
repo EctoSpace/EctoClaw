@@ -1,0 +1,58 @@
+# EctoClaw Audit Policy Example
+# Place in the policies directory or upload via API
+
+name = "openclaw-production"
+description = "Production audit policy for OpenClaw agents"
+max_steps = 500
+
+# Channel restrictions
+allowed_channels = ["whatsapp", "telegram", "discord", "slack"]
+forbidden_channels = ["irc"]
+
+# Skill restrictions
+forbidden_skills = ["shell-exec", "file-delete", "system-reboot"]
+
+# Plugin restrictions
+allowed_plugins = ["ectoclaw", "memory", "web-search", "calendar"]
+forbidden_plugins = ["untrusted-plugin"]
+
+# Message content filters
+[[message_filters]]
+pattern = "password\\s*[:=]\\s*\\S+"
+action = "redact"
+label = "credential"
+
+[[message_filters]]
+pattern = "\\b\\d{3}-\\d{2}-\\d{4}\\b"
+action = "redact"
+label = "ssn"
+
+[[message_filters]]
+pattern = "\\b\\d{16}\\b"
+action = "redact"
+label = "credit-card"
+
+[[message_filters]]
+pattern = "(DROP|DELETE|TRUNCATE)\\s+TABLE"
+action = "block"
+label = "sql-injection"
+
+[[message_filters]]
+pattern = "<script[^>]*>"
+action = "block"
+label = "xss-attempt"
+
+# Approval gates
+[[approval_gates]]
+name = "sensitive-skill"
+trigger = "action == 'skill'"
+description = "Require approval for certain skill invocations"
+
+# Rate limits per channel
+[[rate_limits]]
+channel = "whatsapp"
+max_per_minute = 30
+
+[[rate_limits]]
+channel = "telegram"
+max_per_minute = 60

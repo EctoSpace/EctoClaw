@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EctoClaw | Cryptographic Audit and AI Control Plane</title>
+    <meta
+      name="description"
+      content="EctoClaw is a cryptographic audit and AI control layer for OpenClaw with policy enforcement, approval gates, dashboards, API, CLI, and SDK."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./index.html">
+        <img src="./images/ectoSpace-Logo-noBg.webp" alt="EctoSpace logo" />
+      </a>
+      <nav class="nav">
+        <a href="./index.html">Home</a>
+        <a href="./features.html">Features</a>
+        <a href="./how-to.html">How-to</a>
+        <a href="#features">Features</a>
+        <a href="#platform">Platform</a>
+        <a href="#quickstart">Quick Start</a>
+      </nav>
+      <a class="cta" href="https://github.com/EctoSpace/EctoClaw">GitHub</a>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">OpenClaw Plugin + SDK + API + Dashboard + CLI</p>
+          <h1>EctoClaw is more than a recorder. It is your AI audit and control plane.</h1>
+          <p>
+            EctoClaw captures full agent lifecycles, enforces policy decisions, emits compliance evidence, and ships
+            developer tooling for integration, verification, and operations at production scale.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#quickstart">Get Started</a>
+            <a class="btn btn-ghost" href="./features.html">See v0.1.0 Features</a>
+            <a class="btn btn-ghost" href="./how-to.html">Read How-to Guide</a>
+          </div>
+          <div class="proof-strip">
+            <span>Hash Chain</span>
+            <span>Ed25519</span>
+            <span>Merkle Proofs</span>
+            <span>Policy Engine</span>
+            <span>Approval Gates</span>
+            <span>OpenClaw Plugin</span>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <img class="hero-logo" src="./images/ecLogo.webp" alt="EctoClaw lobster mark" />
+          <h2>Launch-ready for auditable AI systems</h2>
+          <ul>
+            <li>Audit every agent message, tool call, model request, and policy event</li>
+            <li>Serve secure APIs, stream telemetry, and inspect sessions in real time</li>
+            <li>Integrate through OpenClaw plugin hooks, SDK client, or CLI workflows</li>
+            <li>Export verification-ready evidence for compliance and incident response</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="features" class="section">
+        <h2>Core Capabilities</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Cryptographic Integrity</h3>
+            <p>SHA-256 chain hashing, Ed25519 signatures, and Merkle roots prove event and session integrity.</p>
+          </article>
+          <article class="card">
+            <h3>Policy Enforcement Layer</h3>
+            <p>Allow/deny controls, content filters, max-steps guardrails, and approval triggers for sensitive actions.</p>
+          </article>
+          <article class="card">
+            <h3>Operations and Visibility</h3>
+            <p>REST API, SSE stream, dashboard views, metrics, and compliance bundles for active governance.</p>
+          </article>
+          <article class="card">
+            <h3>Developer Experience</h3>
+            <p>Typed SDK, OpenClaw plugin package, CLI commands, demo scripts, and CI-ready build/test pipeline.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="platform" class="section section-alt">
+        <h2>Complete Product Surface</h2>
+        <ul class="checklist">
+          <li>Server: session management, event append, verification, metrics, reports, policy endpoints</li>
+          <li>Plugin: automatic event capture from OpenClaw message/skill/tool/model lifecycle hooks</li>
+          <li>SDK: session APIs, event append APIs, policy management, verification, reports</li>
+          <li>CLI: `serve`, `verify`, `report`, `sessions`, and `status` commands</li>
+          <li>Dashboard: live event feed, policy violations, and session drill-down</li>
+        </ul>
+      </section>
+
+      <section id="use-cases" class="section">
+        <h2>Built for Real OpenClaw Workloads</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Agent Compliance Reviews</h3>
+            <p>Generate defensible records for regulated runs without changing agent business logic.</p>
+          </article>
+          <article class="card">
+            <h3>Incident Investigation</h3>
+            <p>Trace exactly which skill, tool, or model response caused an unexpected action.</p>
+          </article>
+          <article class="card">
+            <h3>Human Approval Workflows</h3>
+            <p>Gate sensitive actions by policy and log explicit approval decisions as first-class events.</p>
+          </article>
+          <article class="card">
+            <h3>Enterprise Audit Exports</h3>
+            <p>Produce report bundles with verification material your security and legal teams can review.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="architecture" class="section section-alt">
+        <h2>Architecture</h2>
+        <pre class="diagram"><code>EctoClaw
+├─ OpenClaw Plugin Hooks and Event Mapper
+├─ REST API + SSE Stream + Dashboard
+├─ Policy Engine and Approval Gates
+├─ Cryptography Core
+│  ├─ SHA-256 Hash Chain
+│  ├─ Ed25519 Signatures
+│  └─ Merkle Tree Proofs
+└─ SQLite Ledger Backend</code></pre>
+      </section>
+
+      <section id="quickstart" class="section">
+        <h2>Quick Start</h2>
+        <pre><code>npm install
+npm run build
+npm test
+
+# start local server
+npm run dev -- serve --dev</code></pre>
+        <p class="section-note">
+          Need full setup guidance and demos? Open the <a href="./how-to.html">How-to page</a>.
+        </p>
+      </section>
+
+      <section class="section section-alt">
+        <h2>Release Track: v0.1.0</h2>
+        <ul class="checklist">
+          <li>Complete feature matrix documented for the v0.1.0 release candidate</li>
+          <li>Publish checks include build, typecheck, tests, and package dry-run validation</li>
+          <li>Website now includes dedicated Features and How-to content pages</li>
+          <li>README aligned with plugin, SDK, server, dashboard, and demo workflows</li>
+        </ul>
+      </section>
+
+      <section id="faq" class="section">
+        <h2>FAQ</h2>
+        <div class="faq-list">
+          <details class="card">
+            <summary>Does EctoClaw replace OpenClaw?</summary>
+            <p>No. It adds cryptographic auditability to OpenClaw by recording agent activity as immutable events.</p>
+          </details>
+          <details class="card">
+            <summary>Can I use it only as an SDK client?</summary>
+            <p>Yes. You can integrate via REST/SDK, use the plugin hooks, or run the server and dashboard directly.</p>
+          </details>
+          <details class="card">
+            <summary>Is EctoClaw only a message recorder?</summary>
+            <p>No. It is an end-to-end audit platform with policy controls, compliance exports, APIs, SDK, and CLI tools.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Copyright © EctoSpace. EctoClaw for OpenClaw ecosystems.</p>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

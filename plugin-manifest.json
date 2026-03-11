@@ -1,0 +1,59 @@
+{
+  "$schema": "https://openclaw.im/schemas/plugin-manifest.json",
+  "name": "ectoclaw",
+  "version": "0.1.0",
+  "description": "Cryptographic audit ledger for OpenClaw AI agents — tamper-evident, policy-enforced, compliance-ready",
+  "author": "EctoSpace",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/EctoSpace/EctoClaw",
+  "main": "./dist/openclaw/plugin.js",
+  "provides": {
+    "tools": [
+      {
+        "name": "ectoclaw_list_sessions",
+        "description": "List recent EctoClaw audit sessions"
+      },
+      {
+        "name": "ectoclaw_verify_session",
+        "description": "Verify a session's cryptographic chain integrity"
+      },
+      {
+        "name": "ectoclaw_get_metrics",
+        "description": "Get EctoClaw ledger metrics and statistics"
+      }
+    ]
+  },
+  "config": {
+    "type": "object",
+    "properties": {
+      "ledger_url": {
+        "type": "string",
+        "description": "EctoClaw server URL",
+        "default": "http://localhost:3210"
+      },
+      "api_token": {
+        "type": "string",
+        "description": "Bearer token for EctoClaw API"
+      },
+      "auto_record": {
+        "type": "boolean",
+        "description": "Automatically record all events",
+        "default": true
+      },
+      "session_per_conversation": {
+        "type": "boolean",
+        "description": "Create a new session per conversation",
+        "default": true
+      },
+      "default_goal": {
+        "type": "string",
+        "description": "Default goal for auto-created sessions",
+        "default": "OpenClaw agent session"
+      },
+      "policy_name": {
+        "type": "string",
+        "description": "Policy to apply to sessions"
+      }
+    }
+  }
+}

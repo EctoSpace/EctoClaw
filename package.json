@@ -1,0 +1,74 @@
+{
+  "name": "ectoclaw",
+  "version": "0.1.0",
+  "description": "Cryptographically verified audit ledger for OpenClaw AI agents — tamper-evident, policy-enforced, compliance-ready",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/EctoSpace/EctoClaw#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EctoSpace/EctoClaw.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EctoSpace/EctoClaw/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "ectoclaw": "./dist/cli/index.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./sdk": {
+      "import": "./dist/sdk/client.js",
+      "types": "./dist/sdk/client.d.ts"
+    },
+    "./plugin": {
+      "import": "./dist/openclaw/plugin.js",
+      "types": "./dist/openclaw/plugin.d.ts"
+    }
+  },
+  "files": ["dist", "migrations", "skills", "plugin-manifest.json", "policy.example.toml", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli/index.ts",
+    "demo": "tsx scripts/demo.ts",
+    "demo:sh": "bash scripts/demo.sh",
+    "start": "node dist/cli/index.js serve",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "pack:check": "npm pack --dry-run",
+    "release:check": "npm run clean && npm run build && npm run typecheck && npm test && npm run pack:check",
+    "prepublishOnly": "npm run release:check"
+  },
+  "keywords": ["ai", "audit", "ledger", "compliance", "openclaw", "cryptography", "agent", "tamper-evident"],
+  "dependencies": {
+    "@noble/ed25519": "^2.2.3",
+    "@noble/hashes": "^1.7.1",
+    "better-sqlite3": "^11.8.1",
+    "commander": "^13.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "toml": "^3.0.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

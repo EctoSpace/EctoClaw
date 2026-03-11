@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EctoClaw v0.1.0 Features</title>
+    <meta
+      name="description"
+      content="Full EctoClaw v0.1.0 feature inventory: cryptography, policies, API, CLI, SDK, plugin, dashboard, and compliance tooling."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./index.html">
+        <img src="./images/ectoSpace-Logo-noBg.webp" alt="EctoSpace logo" />
+      </a>
+      <nav class="nav">
+        <a href="./index.html">Home</a>
+        <a href="./features.html">Features</a>
+        <a href="./how-to.html">How-to</a>
+      </nav>
+      <a class="cta" href="https://github.com/EctoSpace/EctoClaw">GitHub</a>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <p class="eyebrow">Release Feature Matrix</p>
+        <h1>EctoClaw v0.1.0 Features</h1>
+        <p>
+          This page lists current capabilities shipped in v0.1.0 across ledger integrity, policy controls,
+          integrations, APIs, observability, and developer tooling.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Cryptographic Core</h2>
+        <div class="feature-list">
+          <article class="card">
+            <h3>SHA-256 Hash Chain</h3>
+            <p>Each event hash includes previous hash, sequence number, and payload to create a tamper-evident chain.</p>
+          </article>
+          <article class="card">
+            <h3>Ed25519 Event Signatures</h3>
+            <p>Session events are signed for integrity and non-repudiation checks during audits.</p>
+          </article>
+          <article class="card">
+            <h3>Merkle Trees and Proofs</h3>
+            <p>Generate Merkle roots and verify inclusion proofs without exposing full event history.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Policy and Guardrails</h2>
+        <div class="feature-list">
+          <article class="card">
+            <h3>Allow and Deny Rules</h3>
+            <p>Restrict or permit channels, skills, and plugins through TOML policy definitions.</p>
+          </article>
+          <article class="card">
+            <h3>Message Filters</h3>
+            <p>Apply regex-based actions to block, redact, or flag sensitive content patterns.</p>
+          </article>
+          <article class="card">
+            <h3>Step Limits and Approval Gates</h3>
+            <p>Apply execution caps and explicit approval triggers for sensitive operations.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Server and API</h2>
+        <div class="feature-list">
+          <article class="card">
+            <h3>Session Lifecycle APIs</h3>
+            <p>Create, list, seal, and verify sessions through REST endpoints.</p>
+          </article>
+          <article class="card">
+            <h3>Event Ingestion and Reporting</h3>
+            <p>Append typed agent events and generate JSON or HTML audit reports.</p>
+          </article>
+          <article class="card">
+            <h3>SSE Streaming and Metrics</h3>
+            <p>Watch real-time events and query aggregate ledger and security metrics.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Integration Surface</h2>
+        <div class="feature-list">
+          <article class="card">
+            <h3>OpenClaw Plugin</h3>
+            <p>Automatic hook-based capture for messaging, skills, tools, plugins, memory, and model events.</p>
+          </article>
+          <article class="card">
+            <h3>TypeScript SDK</h3>
+            <p>Programmatic client for sessions, events, policies, verification, reports, and compliance bundles.</p>
+          </article>
+          <article class="card">
+            <h3>CLI Tooling</h3>
+            <p>Use commands for serving, status checks, session listing, verification, and report generation.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section-alt">
+        <h2>Developer and Release Tooling</h2>
+        <ul class="checklist">
+          <li>Node.js ESM package with typed exports for root, SDK, and plugin modules</li>
+          <li>Cross-platform demo script plus Bash demo variant</li>
+          <li>Build/test/typecheck pipeline and publish dry-run support</li>
+          <li>Static website pages for landing, features, and setup guidance</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Copyright © EctoSpace. EctoClaw v0.1.0.</p>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
