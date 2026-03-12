@@ -7,6 +7,7 @@ description: >
   Policy engine for defining block, redact, flag, and approval rules.
   Exports compliance bundles and verification reports.
   Protects against prompt injection, credential theft, and unauthorized agent behavior.
+homepage: https://github.com/EctoSpace/EctoClaw
 metadata:
   openclaw:
     requires:
@@ -17,7 +18,7 @@ metadata:
         package: ectoclaw
         bins: ["ectoclaw"]
         label: "Install EctoClaw (npm)"
-    primaryEnv: ECTOCLAW_PORT
+    primaryEnv: ECTOCLAW_URL
 tags:
   - security
   - audit
@@ -36,6 +37,14 @@ tags:
 ## Configuration
 
 - ECTOCLAW_URL: The EctoClaw server URL (default: http://localhost:3210)
+
+> Source code and install scripts are fully open-source at https://github.com/EctoSpace/EctoClaw.
+
+### Security / authentication
+
+- EctoClaw is designed to run on localhost or a private network you control.
+- If you expose ECTOCLAW_URL beyond localhost, put it behind your own authentication and access controls (for example, a reverse proxy with auth).
+- Do not point ECTOCLAW_URL at an untrusted third-party host, since audit logs can contain sensitive prompts, tool outputs, and memory contents.
 
 ## Commands
 
@@ -140,6 +149,8 @@ Every OpenClaw lifecycle event is captured as a signed ledger entry:
 | ApprovalDecision | Human approval or denial recorded                   |
 | SessionSeal      | Session finalized with Merkle root                  |
 | KeyRotation      | Ed25519 signing key rotated                         |
+
+> Only send data to an EctoClaw instance you operate and trust. Treat audit logs as highly sensitive and protect them accordingly.
 
 ## Cryptographic integrity
 
