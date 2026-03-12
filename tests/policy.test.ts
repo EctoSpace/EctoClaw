@@ -62,4 +62,42 @@ describe("PolicyEngine", () => {
     const decision = engine.filterContent("my password: secret123");
     expect(decision.action).toBe("redact");
   });
+
+  it("collects no message filter matches for clean text", () => {
+    const engine = new PolicyEngine(basePolicy);
+    const result = engine.applyAllMessageFilters("hello world");
+    expect(result.blocked).toBeUndefined();
+    expect(result.redactions).toHaveLength(0);
+    expect(result.flags).toHaveLength(0);
+  });
+
+  it("returns blocked result when block filter matches", () => {
+    const engine = new PolicyEngine(basePolicy);
+    const result = engine.applyAllMessageFilters("DROP TABLE users");
+    expect(result.blocked).toBeDefined();
+    expect(result.blocked?.label).toBe("sql-injection");
+  });
+
+  it("collects redaction matches for credential text", () => {
+    const engine = new PolicyEngine(basePolicy);
+    const result = engine.applyAllMessageFilters("password = hunter2");
+    expect(result.blocked).toBeUndefined();
+    expect(result.redactions).toHaveLength(1);
+    expect(result.redactions[0].label).toBe("credential");
+  });
+
+  it("collects redact and flag matches together", () => {
+    const policyWithFlag: AuditPolicy = {
+      ...basePolicy,
+      message_filters: [
+        ...(basePolicy.message_filters ?? []),
+        { pattern: "secret", action: "flag", label: "secret-keyword" },
+      ],
+    };
+    const engine = new PolicyEngine(policyWithFlag);
+    const result = engine.applyAllMessageFilters("password=abc and this is secret");
+    expect(result.blocked).toBeUndefined();
+    expect(result.redactions.map((item) => item.label)).toContain("credential");
+    expect(result.flags.map((item) => item.label)).toContain("secret-keyword");
+  });
 });

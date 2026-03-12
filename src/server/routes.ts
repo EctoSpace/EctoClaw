@@ -20,6 +20,47 @@ import { requireRole, type Role } from "./auth.js";
 // Store session private keys in memory (per-process)
 const sessionKeys = new Map<string, string>();
 
+function extractTextValues(value: unknown, key?: string): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => extractTextValues(item));
+  }
+  if (!value || typeof value !== "object") return [];
+
+  return Object.entries(value as Record<string, unknown>).flatMap(([entryKey, entryValue]) => {
+    if (entryKey === "type" || key === "type") return [];
+    return extractTextValues(entryValue, entryKey);
+  });
+}
+
+function extractPayloadText(payload: EventPayload): string {
+  return extractTextValues(payload).join(" ").trim();
+}
+
+function redactPayloadValue(value: unknown, pattern: RegExp, replacement: string, key?: string): unknown {
+  if (typeof value === "string") {
+    if (key === "type") return value;
+    return value.replace(pattern, replacement);
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => redactPayloadValue(item, pattern, replacement));
+  }
+  if (!value || typeof value !== "object") return value;
+
+  const obj = value as Record<string, unknown>;
+  const result: Record<string, unknown> = {};
+  for (const [entryKey, entryValue] of Object.entries(obj)) {
+    result[entryKey] = redactPayloadValue(entryValue, pattern, replacement, entryKey);
+  }
+  return result;
+}
+
+function redactPayload(payload: EventPayload, pattern: string, label: string): EventPayload {
+  const regex = new RegExp(pattern, "gi");
+  const replacement = `[REDACTED:${label}]`;
+  return redactPayloadValue(payload, regex, replacement) as EventPayload;
+}
+
 export function createRoutes(ledger: SqliteLedger, sse: SSEBroadcaster, dataDir: string): Router {
   const router = Router();
 
@@ -210,7 +251,7 @@ export function createRoutes(ledger: SqliteLedger, sse: SSEBroadcaster, dataDir:
         return;
       }
 
-      const payload = req.body as EventPayload;
+      let payload = req.body as EventPayload;
       if (!payload || !payload.type) {
         res.status(400).json({ error: "Missing event payload with 'type' field" });
         return;
@@ -220,6 +261,8 @@ export function createRoutes(ledger: SqliteLedger, sse: SSEBroadcaster, dataDir:
       const latest = await ledger.getLatest(session.id);
       const prevHash = latest?.contentHash ?? GENESIS_PREVIOUS_HASH;
       const sequence = (latest?.sequence ?? -1) + 1;
+
+      let policyFlagDetails: string[] = [];
 
       // Apply policy if configured
       if (session.policy_name) {
@@ -252,6 +295,56 @@ export function createRoutes(ledger: SqliteLedger, sse: SSEBroadcaster, dataDir:
               res.status(403).json({ error: "Policy violation", reason: decision.reason });
               return;
             }
+
+            const payloadText = extractPayloadText(payload);
+            if (payloadText.length > 0) {
+              const filterResult = engine.applyAllMessageFilters(payloadText);
+
+              if (filterResult.blocked) {
+                const blockedLabel = filterResult.blocked.label;
+                const violationPayload: EventPayload = {
+                  type: "PolicyViolation",
+                  rule: session.policy_name,
+                  action: "block",
+                  details: `Content blocked by filter: ${blockedLabel}`,
+                };
+                const vjson = JSON.stringify(violationPayload);
+                const vhash = computeContentHash(prevHash, sequence, vjson);
+                const privateKey = getSessionKey(session.id);
+                const vsig = privateKey ? await signContentHash(privateKey, vhash) : "";
+
+                await ledger.appendEvent(
+                  session.id,
+                  violationPayload,
+                  vhash,
+                  prevHash,
+                  sequence,
+                  session.public_key,
+                  vsig,
+                );
+
+                sse.broadcast({
+                  type: "policy_violation",
+                  data: { session_id: session.id, reason: violationPayload.details },
+                });
+                res.status(403).json({
+                  blocked: true,
+                  label: blockedLabel,
+                  policy: session.policy_name,
+                });
+                return;
+              }
+
+              if (filterResult.redactions.length > 0) {
+                for (const redaction of filterResult.redactions) {
+                  payload = redactPayload(payload, redaction.pattern, redaction.label);
+                }
+              }
+
+              if (filterResult.flags.length > 0) {
+                policyFlagDetails = filterResult.flags.map((flag) => flag.details);
+              }
+            }
           } catch (policyErr) {
             console.warn(`Policy parse error for "${session.policy_name}":`, policyErr);
           }
@@ -267,6 +360,32 @@ export function createRoutes(ledger: SqliteLedger, sse: SSEBroadcaster, dataDir:
         session.id, payload, contentHash, prevHash, sequence,
         session.public_key, signature,
       );
+
+      if (session.policy_name && policyFlagDetails.length > 0) {
+        let flagPrevHash = contentHash;
+        let flagSequence = sequence + 1;
+        for (const details of policyFlagDetails) {
+          const violationPayload: EventPayload = {
+            type: "PolicyViolation",
+            rule: session.policy_name,
+            action: "flag",
+            details,
+          };
+          const vjson = JSON.stringify(violationPayload);
+          const vhash = computeContentHash(flagPrevHash, flagSequence, vjson);
+          const privateKey = getSessionKey(session.id);
+          const vsig = privateKey ? await signContentHash(privateKey, vhash) : "";
+
+          await ledger.appendEvent(
+            session.id, violationPayload, vhash, flagPrevHash, flagSequence,
+            session.public_key, vsig,
+          );
+
+          sse.broadcast({ type: "policy_violation", data: { session_id: session.id, reason: details } });
+          flagPrevHash = vhash;
+          flagSequence += 1;
+        }
+      }
 
       sse.broadcast({ type: "event_appended", data: { session_id: session.id, sequence, event_type: payload.type } });
       res.status(201).json(result);

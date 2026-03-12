@@ -15,6 +15,12 @@ export type PolicyDecision =
   | { action: "flag"; label: string; details: string }
   | { action: "require_approval"; gate_name: string; trigger: string };
 
+export interface MessageFilterResult {
+  blocked?: { label: string; pattern: string };
+  redactions: Array<{ label: string; pattern: string }>;
+  flags: Array<{ label: string; details: string }>;
+}
+
 export class PolicyEngine {
   private readonly policy: AuditPolicy;
   private readonly compiledFilters: Array<{ regex: RegExp; filter: MessageFilter }>;
@@ -75,6 +81,33 @@ export class PolicyEngine {
       }
     }
     return { action: "allow" };
+  }
+
+  /** Apply all message filters and collect block/redact/flag matches. */
+  applyAllMessageFilters(content: string): MessageFilterResult {
+    const result: MessageFilterResult = { redactions: [], flags: [] };
+
+    for (const { regex, filter } of this.compiledFilters) {
+      regex.lastIndex = 0;
+      if (!regex.test(content)) continue;
+
+      switch (filter.action) {
+        case "block":
+          return {
+            blocked: { label: filter.label, pattern: filter.pattern },
+            redactions: result.redactions,
+            flags: result.flags,
+          };
+        case "redact":
+          result.redactions.push({ label: filter.label, pattern: filter.pattern });
+          break;
+        case "flag":
+          result.flags.push({ label: filter.label, details: `Content matched: ${filter.label}` });
+          break;
+      }
+    }
+
+    return result;
   }
 
   /** Check if a skill is allowed. */
