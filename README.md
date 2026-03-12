@@ -1,5 +1,9 @@
 # What is EctoClaw?
 
+<p align="center">
+  <img src="site/images/screenshots/demo-dashboard.png" alt="EctoClaw dashboard" width="800" />
+</p>
+
 EctoClaw is a fully self-contained AI firewall and cryptographic ledger built to protect your system from rogue OpenClaw agents taking unauthorized or destructive actions.
 
 It is designed to give everyday OpenClaw users, developers, and security teams local, verifiable auditability without the need to deploy a separate enterprise server stack. EctoClaw natively reimplements the core cryptography of EctoLedger in a lightweight package perfectly tailored for agent workflows.
@@ -10,6 +14,43 @@ It is much more than a message recorder. EctoClaw acts as a complete ecosystem c
 - A Policy Engine: Applies decisions to allow, deny, redact, flag, and set approval gates before and during event processing.
 - Cryptographic Evidence: Produces hash chains, Ed25519 signatures, and Merkle tree proofs for compliance and forensics.
 - A Unified Product Surface: Ships natively as an Express server, an OpenClaw plugin, a TypeScript SDK, a CLI, and a built-in monitoring dashboard.
+
+### Event flow
+
+Events from OpenClaw, the REST API, or the SDK are evaluated by the policy engine, then hashed and signed before being appended to the immutable ledger. Outputs include the dashboard, SSE stream, and verification/reports.
+
+```mermaid
+flowchart TB
+  subgraph sources [Event sources]
+    Plugin[OpenClaw Plugin]
+    API[REST API]
+    SDK[SDK / CLI]
+  end
+
+  subgraph process [Processing]
+    Policy[Policy Engine]
+    Crypto[Hash chain + Ed25519 sign]
+  end
+
+  Ledger[(SQLite Ledger)]
+
+  subgraph outputs [Outputs]
+    Dashboard[Dashboard]
+    SSE[SSE stream]
+    Verify[Verify / Reports / Merkle]
+  end
+
+  Plugin --> Policy
+  API --> Policy
+  SDK --> Policy
+  Policy -->|allow| Crypto
+  Policy -->|deny| Violation[PolicyViolation recorded]
+  Violation --> Ledger
+  Crypto --> Ledger
+  Ledger --> Dashboard
+  Ledger --> SSE
+  Ledger --> Verify
+```
 
 ## Why EctoClaw?
 
@@ -113,11 +154,15 @@ PORT=3210 KEEP_DB=1 npm run demo
 
 ### API groups
 
-- Sessions: create, list, inspect, seal, verify.
-- Events: append and query by session.
-- Policies: list, get, save, and delete policy definitions.
-- Reports: generate audit reports and Merkle compliance data.
-- Metrics: view operations and security telemetry.
+- **Sessions:** `GET/POST /api/sessions`, `GET /api/sessions/:id`, `POST /api/sessions/:id/seal` — create, list, inspect, seal.
+- **Events:** `GET /api/events?session_id=`, `POST /api/sessions/:id/events` — append and query by session.
+- **Verification:** `GET /api/sessions/:id/verify` — verify session hash chain.
+- **Compliance:** `GET /api/sessions/:id/compliance` — Merkle compliance bundle for a session.
+- **Merkle proofs:** `GET /api/sessions/:id/merkle` (optional `?leaf=` for proof), `POST /api/merkle/verify` — tree root, proof generation, and proof verification.
+- **Policies:** `GET /api/policies`, `GET /api/policies/:name`, `PUT /api/policies/:name`, `DELETE /api/policies/:name` — list, get, save, delete.
+- **Reports:** `GET /api/reports/:id?format=json|html` — audit reports and compliance data.
+- **Metrics:** `GET /api/metrics` — operations and security telemetry.
+- **SSE:** `GET /api/stream` — real-time event stream.
 
 ### CLI commands
 

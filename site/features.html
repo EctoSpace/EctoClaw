@@ -1,125 +1,320 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EctoClaw v0.1.0 Features</title>
-    <meta
-      name="description"
-      content="Full EctoClaw v0.1.0 feature inventory: cryptography, policies, API, CLI, SDK, plugin, dashboard, and compliance tooling."
-    />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <a class="brand" href="./index.html">
-        <img src="./images/ectoSpace-Logo-noBg.webp" alt="EctoSpace logo" />
-      </a>
-      <nav class="nav">
-        <a href="./index.html">Home</a>
-        <a href="./features.html">Features</a>
-        <a href="./how-to.html">How-to</a>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EctoClaw v0.1.0 Features</title>
+  <meta
+    name="description"
+    content="Full EctoClaw v0.1.0 feature inventory: cryptography, policies, API, CLI, SDK, plugin, dashboard, and compliance tooling."
+  />
+  <link rel="icon" href="images/ectoSpace-Logo.webp" type="image/webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ["Sora", "system-ui", "sans-serif"],
+            sans: ["Space Grotesk", "system-ui", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"],
+          },
+          colors: {
+            brand: { 300: "#bca8ff", 400: "#9d79ff", 500: "#8356ff", 600: "#6837f6" },
+            aqua: { 300: "#73e3ff", 400: "#35d6ff" },
+            mint: { 300: "#6df7d1", 400: "#34e5bd" },
+            ink: { 950: "#05060a", 900: "#0b0d14" },
+          },
+          keyframes: {
+            fadeUp: { "0%": { opacity: "0", transform: "translateY(24px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },
+          },
+          animation: { "fade-up": "fadeUp 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards" },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background:
+        radial-gradient(860px 520px at 12% -2%, rgba(131, 86, 255, 0.2), transparent 62%),
+        radial-gradient(980px 520px at 88% -8%, rgba(53, 214, 255, 0.16), transparent 62%),
+        radial-gradient(820px 420px at 50% 108%, rgba(52, 229, 189, 0.13), transparent 68%),
+        #05060a;
+      color: #f7f8ff;
+    }
+    .glass {
+      background: rgba(16, 20, 32, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 18px 56px rgba(2, 4, 10, 0.5);
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1), transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #header-subnav {
+      padding-top: 0;
+      padding-bottom: 0;
+      border-top-color: transparent;
+    }
+    #site-header.subnav-merged #header-subnav {
+      max-height: 4rem;
+      opacity: 1;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-brand-500/35 selection:text-white">
+  <div class="relative z-10">
+    <header id="site-header" class="fixed left-1/2 top-4 z-50 w-[min(1140px,94vw)] -translate-x-1/2 transition-[width] duration-200">
+      <div id="header-inner" class="glass flex flex-col rounded-2xl px-4 sm:px-6 transition-all duration-200">
+        <div class="flex h-16 items-center justify-between">
+          <a href="index.html#top" class="flex items-center gap-2">
+            <img src="images/ectoSpace-Logo-noBg.webp" alt="EctoSpace" class="h-9 w-auto max-w-[160px] object-contain" />
+          </a>
+          <nav class="hidden items-center gap-7 text-sm text-zinc-300 md:flex">
+            <a href="index.html#top" class="transition-colors hover:text-white">Home</a>
+            <a href="how-to.html" class="transition-colors hover:text-white">How-to</a>
+            <a href="features.html" aria-current="page" class="text-white transition-colors hover:text-white">Features</a>
+          </nav>
+          <div class="flex items-center gap-2">
+            <a
+              href="https://github.com/EctoSpace/EctoClaw"
+              class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-white transition hover:border-brand-300/60 hover:bg-brand-500/15"
+            >
+              View GitHub
+            </a>
+            <button id="nav-toggle" class="md:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 text-zinc-300 hover:text-white transition" aria-label="Open navigation">
+              <svg id="icon-open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <nav id="header-subnav" class="flex flex-wrap justify-center gap-2 border-t border-white/10 py-2 text-sm text-zinc-300 overflow-hidden transition-all duration-200 max-h-0 opacity-0 md:flex" aria-label="On this page">
+          <a href="#crypto-core" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Cryptographic Core</a>
+          <a href="#policy-guardrails" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Policy and Guardrails</a>
+          <a href="#server-api" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Server and API</a>
+          <a href="#integration-surface" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Integration Surface</a>
+          <a href="#developer-tooling" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Developer Tooling</a>
+        </nav>
+      </div>
+      <nav id="mobile-nav" class="glass mt-2 hidden rounded-2xl px-5 py-4 md:hidden">
+        <div class="flex flex-col gap-1 text-sm text-zinc-300">
+          <a href="index.html#top" class="rounded-lg px-3 py-2 transition-colors hover:bg-white/[0.06] hover:text-white">Home</a>
+          <a href="how-to.html" class="rounded-lg px-3 py-2 transition-colors hover:bg-white/[0.06] hover:text-white">How-to</a>
+          <a href="features.html" aria-current="page" class="rounded-lg bg-white/[0.06] px-3 py-2 text-white transition-colors hover:bg-white/[0.08]">Features</a>
+        </div>
       </nav>
-      <a class="cta" href="https://github.com/EctoSpace/EctoClaw">GitHub</a>
     </header>
 
     <main>
-      <section class="page-hero">
-        <p class="eyebrow">Release Feature Matrix</p>
-        <h1>EctoClaw v0.1.0 Features</h1>
-        <p>
-          This page lists current capabilities shipped in v0.1.0 across ledger integrity, policy controls,
-          integrations, APIs, observability, and developer tooling.
-        </p>
-      </section>
-
-      <section class="section">
-        <h2>Cryptographic Core</h2>
-        <div class="feature-list">
-          <article class="card">
-            <h3>SHA-256 Hash Chain</h3>
-            <p>Each event hash includes previous hash, sequence number, and payload to create a tamper-evident chain.</p>
-          </article>
-          <article class="card">
-            <h3>Ed25519 Event Signatures</h3>
-            <p>Session events are signed for integrity and non-repudiation checks during audits.</p>
-          </article>
-          <article class="card">
-            <h3>Merkle Trees and Proofs</h3>
-            <p>Generate Merkle roots and verify inclusion proofs without exposing full event history.</p>
-          </article>
+      <section class="pt-36 sm:pt-44 pb-12">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
+          <div class="reveal flex flex-wrap items-center justify-center gap-4">
+            <img src="images/ectoClaw-Logo.webp" alt="EctoClaw logo" class="h-16 w-auto sm:h-20" />
+            <h1 class="font-display text-4xl font-bold tracking-tight sm:text-5xl">EctoClaw</h1>
+          </div>
+          <p class="reveal mt-4 font-mono text-xs uppercase tracking-[0.22em] text-brand-300">Release Feature Matrix</p>
+          <p class="reveal mt-4 text-zinc-300">
+            This page lists current capabilities shipped in v0.1.0 across ledger integrity, policy controls, integrations, APIs, observability, and developer tooling.
+          </p>
+        </div>
+        <div id="subnav-sentinel" aria-hidden="true" class="h-px w-full"></div>
+        <div class="mx-auto mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
+          <nav id="page-subnav" class="reveal flex flex-wrap justify-center gap-2 text-sm text-zinc-300" aria-label="On this page">
+            <a href="#crypto-core" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Cryptographic Core</a>
+            <a href="#policy-guardrails" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Policy and Guardrails</a>
+            <a href="#server-api" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Server and API</a>
+            <a href="#integration-surface" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Integration Surface</a>
+            <a href="#developer-tooling" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Developer Tooling</a>
+          </nav>
         </div>
       </section>
 
-      <section class="section">
-        <h2>Policy and Guardrails</h2>
-        <div class="feature-list">
-          <article class="card">
-            <h3>Allow and Deny Rules</h3>
-            <p>Restrict or permit channels, skills, and plugins through TOML policy definitions.</p>
-          </article>
-          <article class="card">
-            <h3>Message Filters</h3>
-            <p>Apply regex-based actions to block, redact, or flag sensitive content patterns.</p>
-          </article>
-          <article class="card">
-            <h3>Step Limits and Approval Gates</h3>
-            <p>Apply execution caps and explicit approval triggers for sensitive operations.</p>
-          </article>
+      <section id="crypto-core" class="scroll-mt-28 pb-12 sm:pb-16">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8 border-l-4 border-brand-400/60">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-brand-300">Cryptographic Core</p>
+            <div class="mt-6 grid gap-4 md:grid-cols-3">
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">SHA-256 Hash Chain</h3>
+                <p class="mt-2 text-sm text-zinc-300">Each event hash includes previous hash, sequence number, and payload to create a tamper-evident chain.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Ed25519 Event Signatures</h3>
+                <p class="mt-2 text-sm text-zinc-300">Session events are signed for integrity and non-repudiation checks during audits.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Merkle Trees and Proofs</h3>
+                <p class="mt-2 text-sm text-zinc-300">Generate Merkle roots and verify inclusion proofs without exposing full event history.</p>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="section">
-        <h2>Server and API</h2>
-        <div class="feature-list">
-          <article class="card">
-            <h3>Session Lifecycle APIs</h3>
-            <p>Create, list, seal, and verify sessions through REST endpoints.</p>
-          </article>
-          <article class="card">
-            <h3>Event Ingestion and Reporting</h3>
-            <p>Append typed agent events and generate JSON or HTML audit reports.</p>
-          </article>
-          <article class="card">
-            <h3>SSE Streaming and Metrics</h3>
-            <p>Watch real-time events and query aggregate ledger and security metrics.</p>
-          </article>
+      <section id="policy-guardrails" class="scroll-mt-28 pb-12 sm:pb-16">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8 border-l-4 border-mint-400/60">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-mint-300">Policy and Guardrails</p>
+            <div class="mt-6 grid gap-4 md:grid-cols-3">
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Allow and Deny Rules</h3>
+                <p class="mt-2 text-sm text-zinc-300">Restrict or permit channels, skills, and plugins through TOML policy definitions.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Message Filters</h3>
+                <p class="mt-2 text-sm text-zinc-300">Apply regex-based actions to block, redact, or flag sensitive content patterns.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Step Limits and Approval Gates</h3>
+                <p class="mt-2 text-sm text-zinc-300">Apply execution caps and explicit approval triggers for sensitive operations.</p>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="section">
-        <h2>Integration Surface</h2>
-        <div class="feature-list">
-          <article class="card">
-            <h3>OpenClaw Plugin</h3>
-            <p>Automatic hook-based capture for messaging, skills, tools, plugins, memory, and model events.</p>
-          </article>
-          <article class="card">
-            <h3>TypeScript SDK</h3>
-            <p>Programmatic client for sessions, events, policies, verification, reports, and compliance bundles.</p>
-          </article>
-          <article class="card">
-            <h3>CLI Tooling</h3>
-            <p>Use commands for serving, status checks, session listing, verification, and report generation.</p>
-          </article>
+      <section id="server-api" class="scroll-mt-28 pb-12 sm:pb-16">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8 border-l-4 border-aqua-400/60">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-aqua-300">Server and API</p>
+            <div class="mt-6 grid gap-4 md:grid-cols-3">
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Session Lifecycle APIs</h3>
+                <p class="mt-2 text-sm text-zinc-300">Create, list, seal, and verify sessions through REST endpoints.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Event Ingestion and Reporting</h3>
+                <p class="mt-2 text-sm text-zinc-300">Append typed agent events and generate JSON or HTML audit reports.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">SSE Streaming and Metrics</h3>
+                <p class="mt-2 text-sm text-zinc-300">Watch real-time events and query aggregate ledger and security metrics.</p>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section class="section section-alt">
-        <h2>Developer and Release Tooling</h2>
-        <ul class="checklist">
-          <li>Node.js ESM package with typed exports for root, SDK, and plugin modules</li>
-          <li>Cross-platform demo script plus Bash demo variant</li>
-          <li>Build/test/typecheck pipeline and publish dry-run support</li>
-          <li>Static website pages for landing, features, and setup guidance</li>
-        </ul>
+      <section id="integration-surface" class="scroll-mt-28 pb-12 sm:pb-16">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8 border-l-4 border-brand-400/60">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-brand-300">Integration Surface</p>
+            <div class="mt-6 grid gap-4 md:grid-cols-3">
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">OpenClaw Plugin</h3>
+                <p class="mt-2 text-sm text-zinc-300">Automatic hook-based capture for messaging, skills, tools, plugins, memory, and model events.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">TypeScript SDK</h3>
+                <p class="mt-2 text-sm text-zinc-300">Programmatic client for sessions, events, policies, verification, reports, and compliance bundles.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">CLI Tooling</h3>
+                <p class="mt-2 text-sm text-zinc-300">Use commands for serving, status checks, session listing, verification, and report generation.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="developer-tooling" class="scroll-mt-28 pb-16 sm:pb-20">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8 border-l-4 border-mint-400/60">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-mint-300">Developer and Release Tooling</p>
+            <ul class="mt-5 space-y-2 text-sm text-zinc-300">
+              <li>Node.js ESM package with typed exports for root, SDK, and plugin modules.</li>
+              <li>Cross-platform demo script plus Bash demo variant.</li>
+              <li>Build/test/typecheck pipeline and publish dry-run support.</li>
+              <li>Static website pages for landing, features, and setup guidance.</li>
+            </ul>
+          </div>
+        </div>
       </section>
     </main>
 
-    <footer class="footer">
-      <p>Copyright © EctoSpace. EctoClaw v0.1.0.</p>
+    <footer class="border-t border-white/10 py-8 text-center text-sm text-zinc-400">
+      Copyright © EctoSpace. EctoClaw v0.1.0.
     </footer>
+  </div>
 
-    <script src="./script.js"></script>
-  </body>
+  <script>
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("show");
+        });
+      },
+      { rootMargin: "0px 0px -70px 0px", threshold: 0 }
+    );
+
+    var subnavSentinel = document.getElementById("subnav-sentinel");
+    var siteHeader = document.getElementById("site-header");
+    if (subnavSentinel && siteHeader) {
+      var syncMergedHeaderState = function (sentinelTop) {
+        var headerBottom = siteHeader.getBoundingClientRect().bottom;
+        var shouldMerge = sentinelTop <= headerBottom;
+        siteHeader.classList.toggle("subnav-merged", shouldMerge);
+      };
+
+      var subnavObserver = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            syncMergedHeaderState(entry.boundingClientRect.top);
+          });
+        },
+        { threshold: [0, 1] }
+      );
+      subnavObserver.observe(subnavSentinel);
+      syncMergedHeaderState(subnavSentinel.getBoundingClientRect().top);
+      window.addEventListener("resize", function () {
+        syncMergedHeaderState(subnavSentinel.getBoundingClientRect().top);
+      });
+      window.addEventListener("scroll", function () {
+        syncMergedHeaderState(subnavSentinel.getBoundingClientRect().top);
+      }, { passive: true });
+    }
+
+    document.querySelectorAll(".reveal").forEach(function (node, index) {
+      node.style.transitionDelay = Math.min(index * 45, 380) + "ms";
+      observer.observe(node);
+    });
+
+    document.getElementById("nav-toggle").addEventListener("click", function () {
+      var nav = document.getElementById("mobile-nav");
+      var iconOpen = document.getElementById("icon-open");
+      var iconClose = document.getElementById("icon-close");
+      nav.classList.toggle("hidden");
+      iconOpen.classList.toggle("hidden");
+      iconClose.classList.toggle("hidden");
+    });
+    document.querySelectorAll("#mobile-nav a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        document.getElementById("mobile-nav").classList.add("hidden");
+        document.getElementById("icon-open").classList.remove("hidden");
+        document.getElementById("icon-close").classList.add("hidden");
+      });
+    });
+  </script>
+</body>
 </html>

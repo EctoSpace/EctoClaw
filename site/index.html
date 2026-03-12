@@ -1,180 +1,445 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EctoClaw | Cryptographic Audit and AI Control Plane</title>
-    <meta
-      name="description"
-      content="EctoClaw is a cryptographic audit and AI control layer for OpenClaw with policy enforcement, approval gates, dashboards, API, CLI, and SDK."
-    />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <a class="brand" href="./index.html">
-        <img src="./images/ectoSpace-Logo-noBg.webp" alt="EctoSpace logo" />
-      </a>
-      <nav class="nav">
-        <a href="./index.html">Home</a>
-        <a href="./features.html">Features</a>
-        <a href="./how-to.html">How-to</a>
-        <a href="#features">Features</a>
-        <a href="#platform">Platform</a>
-        <a href="#quickstart">Quick Start</a>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EctoClaw | Cryptographic Audit and AI Control Plane</title>
+  <meta
+    name="description"
+    content="EctoClaw is a local firewall and cryptographic audit ledger for OpenClaw agents. See what they did and control what they're allowed to do. Policy enforcement, dashboards, API, CLI, and SDK."
+  />
+  <link rel="icon" href="images/ectoSpace-Logo.webp" type="image/webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ["Sora", "system-ui", "sans-serif"],
+            sans: ["Space Grotesk", "system-ui", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"],
+          },
+          colors: {
+            brand: { 300: "#bca8ff", 400: "#9d79ff", 500: "#8356ff", 600: "#6837f6" },
+            aqua: { 300: "#73e3ff", 400: "#35d6ff" },
+            mint: { 300: "#6df7d1", 400: "#34e5bd" },
+            ink: { 950: "#05060a", 900: "#0b0d14" },
+          },
+          keyframes: {
+            fadeUp: {
+              "0%": { opacity: "0", transform: "translateY(24px)" },
+              "100%": { opacity: "1", transform: "translateY(0)" },
+            },
+            float: {
+              "0%,100%": { transform: "translateY(0px)" },
+              "50%": { transform: "translateY(-8px)" },
+            },
+            marquee: {
+              "0%": { transform: "translateX(0%)" },
+              "100%": { transform: "translateX(-50%)" },
+            },
+          },
+          animation: {
+            "fade-up": "fadeUp 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+            float: "float 5.5s ease-in-out infinite",
+            marquee: "marquee 24s linear infinite",
+          },
+          boxShadow: {
+            glow:
+              "0 0 0 1px rgba(157,121,255,0.15), 0 18px 60px rgba(3,6,14,0.55), 0 0 100px rgba(53,214,255,0.12)",
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background:
+        radial-gradient(860px 520px at 12% -2%, rgba(131, 86, 255, 0.2), transparent 62%),
+        radial-gradient(980px 520px at 88% -8%, rgba(53, 214, 255, 0.16), transparent 62%),
+        radial-gradient(820px 420px at 50% 108%, rgba(52, 229, 189, 0.13), transparent 68%),
+        #05060a;
+      color: #f7f8ff;
+    }
+    .glass {
+      background: rgba(16, 20, 32, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 18px 56px rgba(2, 4, 10, 0.5);
+    }
+    .mesh-border {
+      position: relative;
+      isolation: isolate;
+    }
+    .mesh-border::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(
+        135deg,
+        rgba(157, 121, 255, 0.42),
+        rgba(53, 214, 255, 0.35),
+        rgba(52, 229, 189, 0.3)
+      );
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1), transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .hero-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(5, 6, 10, 0.75) 0%, rgba(5, 6, 10, 0.92) 100%);
+      pointer-events: none;
+    }
+    #header-subnav {
+      padding-top: 0;
+      padding-bottom: 0;
+      border-top-color: transparent;
+    }
+    #site-header.subnav-merged #header-subnav {
+      max-height: 4rem;
+      opacity: 1;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body id="top" class="font-sans antialiased selection:bg-brand-500/35 selection:text-white">
+  <div class="relative z-10">
+    <header id="site-header" class="fixed left-1/2 top-4 z-50 w-[min(1140px,94vw)] -translate-x-1/2 transition-[width] duration-200">
+      <div id="header-inner" class="glass flex flex-col rounded-2xl px-4 sm:px-6 transition-all duration-200">
+        <div class="flex h-16 items-center justify-between">
+          <a href="index.html#top" class="flex items-center gap-2">
+            <img src="images/ectoSpace-Logo-noBg.webp" alt="EctoSpace" class="h-9 w-auto max-w-[160px] object-contain" />
+          </a>
+          <nav class="hidden items-center gap-7 text-sm text-zinc-300 md:flex">
+            <a href="index.html#top" aria-current="page" class="text-white transition-colors hover:text-white">Home</a>
+            <a href="how-to.html" class="transition-colors hover:text-white">How-to</a>
+            <a href="features.html" class="transition-colors hover:text-white">Features</a>
+          </nav>
+          <div class="flex items-center gap-2">
+            <a
+              href="https://github.com/EctoSpace/EctoClaw"
+              class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-white transition hover:border-brand-300/60 hover:bg-brand-500/15"
+            >
+              View GitHub
+            </a>
+            <button id="nav-toggle" class="md:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 text-zinc-300 hover:text-white transition" aria-label="Open navigation">
+              <svg id="icon-open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <nav id="header-subnav" class="flex flex-wrap justify-center gap-2 border-t border-white/10 py-2 text-sm text-zinc-300 overflow-hidden transition-all duration-200 max-h-0 opacity-0 md:flex" aria-label="On this page">
+          <a href="#features" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Core Capabilities</a>
+          <a href="#platform" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Platform</a>
+          <a href="#use-cases" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Use Cases</a>
+          <a href="#architecture" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Architecture</a>
+          <a href="#quickstart" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">Quick Start</a>
+          <a href="#faq" class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 transition hover:bg-white/[0.08] hover:text-white text-xs">FAQ</a>
+        </nav>
+      </div>
+      <nav id="mobile-nav" class="glass mt-2 hidden rounded-2xl px-5 py-4 md:hidden">
+        <div class="flex flex-col gap-1 text-sm text-zinc-300">
+          <a href="index.html#top" aria-current="page" class="rounded-lg bg-white/[0.06] px-3 py-2 text-white transition-colors hover:bg-white/[0.08]">Home</a>
+          <a href="how-to.html" class="rounded-lg px-3 py-2 transition-colors hover:bg-white/[0.06] hover:text-white">How-to</a>
+          <a href="features.html" class="rounded-lg px-3 py-2 transition-colors hover:bg-white/[0.06] hover:text-white">Features</a>
+        </div>
       </nav>
-      <a class="cta" href="https://github.com/EctoSpace/EctoClaw">GitHub</a>
     </header>
 
-    <main id="top">
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">OpenClaw Plugin + SDK + API + Dashboard + CLI</p>
-          <h1>EctoClaw is more than a recorder. It is your AI audit and control plane.</h1>
-          <p>
-            EctoClaw captures full agent lifecycles, enforces policy decisions, emits compliance evidence, and ships
-            developer tooling for integration, verification, and operations at production scale.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#quickstart">Get Started</a>
-            <a class="btn btn-ghost" href="./features.html">See v0.1.0 Features</a>
-            <a class="btn btn-ghost" href="./how-to.html">Read How-to Guide</a>
+    <main>
+      <section class="pt-36 sm:pt-44">
+        <div class="hero-bg relative rounded-b-3xl pb-16 sm:pb-20">
+          <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+              <div class="reveal flex flex-wrap items-center justify-center gap-4">
+                <img src="images/ectoClaw-Logo.webp" alt="EctoClaw logo" class="h-20 w-auto sm:h-24" />
+                <h1 class="font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">EctoClaw</h1>
+              </div>
+              <h3 class="reveal mx-auto mt-8 max-w-5xl font-display text-xl leading-snug tracking-tight text-zinc-200 sm:text-2xl lg:text-3xl">
+                EctoClaw is a local firewall and cryptographic audit ledger for OpenClaw agents so you can see what they did and control what they're allowed to do.
+              </h3>
+              <p class="reveal mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-zinc-300">
+                EctoClaw captures full agent lifecycles, enforces policy decisions, emits compliance evidence, and ships developer tooling for integration, verification, and operations at production scale.
+              </p>
+              <div class="reveal mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <a href="#quickstart" class="rounded-full bg-white px-8 py-3.5 font-display text-sm font-semibold uppercase tracking-[0.14em] text-ink-950 transition hover:bg-zinc-200">
+                  Get Started
+                </a>
+                <a href="features.html" class="rounded-full border border-white/20 px-8 py-3.5 font-display text-sm font-semibold uppercase tracking-[0.14em] text-white transition hover:border-aqua-300/60 hover:bg-aqua-400/10">
+                  See v0.1.0 Features
+                </a>
+                <a href="how-to.html" class="rounded-full border border-white/20 px-8 py-3.5 font-display text-sm font-semibold uppercase tracking-[0.14em] text-white transition hover:border-aqua-300/60 hover:bg-aqua-400/10">
+                  Read How-to Guide
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="proof-strip">
-            <span>Hash Chain</span>
-            <span>Ed25519</span>
-            <span>Merkle Proofs</span>
-            <span>Policy Engine</span>
-            <span>Approval Gates</span>
-            <span>OpenClaw Plugin</span>
+        </div>
+
+        <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
+          <div class="reveal mesh-border rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02] shadow-glow">
+            <img src="images/screenshots/demo-dashboard.png" alt="EctoClaw dashboard showing sessions and event feed" class="w-full rounded-xl" />
           </div>
         </div>
-        <div class="hero-panel">
-          <img class="hero-logo" src="./images/ecLogo.webp" alt="EctoClaw lobster mark" />
-          <h2>Launch-ready for auditable AI systems</h2>
-          <ul>
-            <li>Audit every agent message, tool call, model request, and policy event</li>
-            <li>Serve secure APIs, stream telemetry, and inspect sessions in real time</li>
-            <li>Integrate through OpenClaw plugin hooks, SDK client, or CLI workflows</li>
-            <li>Export verification-ready evidence for compliance and incident response</li>
-          </ul>
+
+        <div id="subnav-sentinel" aria-hidden="true" class="h-px w-full"></div>
+        <nav id="page-subnav" class="mx-auto mt-8 max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="On this page">
+          <div class="reveal flex flex-wrap justify-center gap-2 text-sm text-zinc-300">
+            <a href="#features" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Core Capabilities</a>
+            <a href="#platform" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Platform</a>
+            <a href="#use-cases" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Use Cases</a>
+            <a href="#architecture" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Architecture</a>
+            <a href="#quickstart" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">Quick Start</a>
+            <a href="#faq" class="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 transition hover:bg-white/[0.08] hover:text-white">FAQ</a>
+          </div>
+        </nav>
+      </section>
+
+      <section id="features" class="scroll-mt-28 pb-12 sm:pb-16">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-brand-300">Core Capabilities</p>
+            <h2 class="mt-3 font-display text-2xl tracking-tight sm:text-3xl">What EctoClaw gives your team</h2>
+            <div class="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Cryptographic Integrity</h3>
+                <p class="mt-2 text-sm text-zinc-300">SHA-256 chain hashing, Ed25519 signatures, and Merkle roots prove event and session integrity.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Policy Enforcement Layer</h3>
+                <p class="mt-2 text-sm text-zinc-300">Allow and deny controls, content filters, max-step guardrails, and approval triggers for sensitive actions.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Operations and Visibility</h3>
+                <p class="mt-2 text-sm text-zinc-300">REST API, SSE stream, dashboard views, metrics, and compliance bundles for active governance.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Developer Experience</h3>
+                <p class="mt-2 text-sm text-zinc-300">Typed SDK, OpenClaw plugin package, CLI commands, demo scripts, and CI-ready build/test pipeline.</p>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section id="features" class="section">
-        <h2>Core Capabilities</h2>
-        <div class="grid">
-          <article class="card">
-            <h3>Cryptographic Integrity</h3>
-            <p>SHA-256 chain hashing, Ed25519 signatures, and Merkle roots prove event and session integrity.</p>
-          </article>
-          <article class="card">
-            <h3>Policy Enforcement Layer</h3>
-            <p>Allow/deny controls, content filters, max-steps guardrails, and approval triggers for sensitive actions.</p>
-          </article>
-          <article class="card">
-            <h3>Operations and Visibility</h3>
-            <p>REST API, SSE stream, dashboard views, metrics, and compliance bundles for active governance.</p>
-          </article>
-          <article class="card">
-            <h3>Developer Experience</h3>
-            <p>Typed SDK, OpenClaw plugin package, CLI commands, demo scripts, and CI-ready build/test pipeline.</p>
-          </article>
+      <section id="platform" class="scroll-mt-28 pb-12 sm:pb-16">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8 border-l-4 border-aqua-400/60">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-aqua-300">Complete Product Surface</p>
+            <ul class="mt-5 space-y-2 text-sm text-zinc-300">
+              <li>Server: session management, event append, verification, metrics, reports, and policy endpoints.</li>
+              <li>Plugin: automatic event capture from OpenClaw message, skill, tool, and model lifecycle hooks.</li>
+              <li>SDK: session APIs, event append APIs, policy management, verification, and reports.</li>
+              <li>CLI: <code>serve</code>, <code>verify</code>, <code>report</code>, <code>sessions</code>, and <code>status</code>.</li>
+              <li>Dashboard: live event feed, policy violations, and session drill-down visibility.</li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      <section id="platform" class="section section-alt">
-        <h2>Complete Product Surface</h2>
-        <ul class="checklist">
-          <li>Server: session management, event append, verification, metrics, reports, policy endpoints</li>
-          <li>Plugin: automatic event capture from OpenClaw message/skill/tool/model lifecycle hooks</li>
-          <li>SDK: session APIs, event append APIs, policy management, verification, reports</li>
-          <li>CLI: `serve`, `verify`, `report`, `sessions`, and `status` commands</li>
-          <li>Dashboard: live event feed, policy violations, and session drill-down</li>
-        </ul>
-      </section>
-
-      <section id="use-cases" class="section">
-        <h2>Built for Real OpenClaw Workloads</h2>
-        <div class="grid">
-          <article class="card">
-            <h3>Agent Compliance Reviews</h3>
-            <p>Generate defensible records for regulated runs without changing agent business logic.</p>
-          </article>
-          <article class="card">
-            <h3>Incident Investigation</h3>
-            <p>Trace exactly which skill, tool, or model response caused an unexpected action.</p>
-          </article>
-          <article class="card">
-            <h3>Human Approval Workflows</h3>
-            <p>Gate sensitive actions by policy and log explicit approval decisions as first-class events.</p>
-          </article>
-          <article class="card">
-            <h3>Enterprise Audit Exports</h3>
-            <p>Produce report bundles with verification material your security and legal teams can review.</p>
-          </article>
+      <section id="use-cases" class="scroll-mt-28 pb-12 sm:pb-16">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8 border-l-4 border-mint-400/60">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-mint-300">Built for Real OpenClaw Workloads</p>
+            <div class="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Agent Compliance Reviews</h3>
+                <p class="mt-2 text-sm text-zinc-300">Generate defensible records for regulated runs without changing agent business logic.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Incident Investigation</h3>
+                <p class="mt-2 text-sm text-zinc-300">Trace exactly which skill, tool, or model response caused an unexpected action.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Human Approval Workflows</h3>
+                <p class="mt-2 text-sm text-zinc-300">Gate sensitive actions by policy and log explicit approval decisions as first-class events.</p>
+              </article>
+              <article class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <h3 class="font-display text-lg text-white">Enterprise Audit Exports</h3>
+                <p class="mt-2 text-sm text-zinc-300">Produce report bundles with verification material your security and legal teams can review.</p>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section id="architecture" class="section section-alt">
-        <h2>Architecture</h2>
-        <pre class="diagram"><code>EctoClaw
-├─ OpenClaw Plugin Hooks and Event Mapper
-├─ REST API + SSE Stream + Dashboard
-├─ Policy Engine and Approval Gates
-├─ Cryptography Core
-│  ├─ SHA-256 Hash Chain
-│  ├─ Ed25519 Signatures
-│  └─ Merkle Tree Proofs
-└─ SQLite Ledger Backend</code></pre>
+      <section id="architecture" class="scroll-mt-28 pb-12 sm:pb-16">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal mesh-border glass rounded-3xl p-6 sm:p-8 shadow-glow">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-brand-300">Architecture</p>
+            <h2 class="mt-3 font-display text-2xl tracking-tight sm:text-3xl text-white">Event flow</h2>
+            <p class="mt-2 text-sm text-zinc-300">Events from OpenClaw, the REST API, or the SDK are evaluated by the policy engine, then hashed and signed before being appended to the immutable ledger.</p>
+            <div class="mt-6 rounded-2xl border border-white/10 bg-ink-900/70 p-6 overflow-x-auto">
+              <div class="mermaid text-sm">flowchart TB
+  subgraph sources[Event sources]
+    Plugin[OpenClaw Plugin]
+    API[REST API]
+    SDK[SDK / CLI]
+  end
+
+  subgraph process[Processing]
+    Policy[Policy Engine]
+    Crypto[Hash chain + Ed25519 sign]
+  end
+
+  Ledger[(SQLite Ledger)]
+
+  subgraph outputs[Outputs]
+    Dashboard[Dashboard]
+    SSE[SSE stream]
+    Verify[Verify / Reports / Merkle]
+  end
+
+  Plugin --> Policy
+  API --> Policy
+  SDK --> Policy
+  Policy -->|allow| Crypto
+  Policy -->|deny| Violation[PolicyViolation recorded]
+  Violation --> Ledger
+  Crypto --> Ledger
+  Ledger --> Dashboard
+  Ledger --> SSE
+  Ledger --> Verify</div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <section id="quickstart" class="section">
-        <h2>Quick Start</h2>
-        <pre><code>npm install
+      <section id="quickstart" class="scroll-mt-28 pb-12 sm:pb-16">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8 border-l-4 border-brand-400/60">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-brand-300">Quick Start</p>
+            <pre class="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-ink-900/70 p-4 font-mono text-sm text-zinc-300"><code>npm install
 npm run build
 npm test
 
 # start local server
 npm run dev -- serve --dev</code></pre>
-        <p class="section-note">
-          Need full setup guidance and demos? Open the <a href="./how-to.html">How-to page</a>.
-        </p>
+            <p class="mt-4 text-sm text-zinc-300">
+              Need full setup guidance and demos? Open the <a href="how-to.html" class="text-aqua-300 hover:text-aqua-400">How-to page</a>.
+            </p>
+          </div>
+        </div>
       </section>
 
-      <section class="section section-alt">
-        <h2>Release Track: v0.1.0</h2>
-        <ul class="checklist">
-          <li>Complete feature matrix documented for the v0.1.0 release candidate</li>
-          <li>Publish checks include build, typecheck, tests, and package dry-run validation</li>
-          <li>Website now includes dedicated Features and How-to content pages</li>
-          <li>README aligned with plugin, SDK, server, dashboard, and demo workflows</li>
-        </ul>
-      </section>
-
-      <section id="faq" class="section">
-        <h2>FAQ</h2>
-        <div class="faq-list">
-          <details class="card">
-            <summary>Does EctoClaw replace OpenClaw?</summary>
-            <p>No. It adds cryptographic auditability to OpenClaw by recording agent activity as immutable events.</p>
-          </details>
-          <details class="card">
-            <summary>Can I use it only as an SDK client?</summary>
-            <p>Yes. You can integrate via REST/SDK, use the plugin hooks, or run the server and dashboard directly.</p>
-          </details>
-          <details class="card">
-            <summary>Is EctoClaw only a message recorder?</summary>
-            <p>No. It is an end-to-end audit platform with policy controls, compliance exports, APIs, SDK, and CLI tools.</p>
-          </details>
+      <section id="faq" class="scroll-mt-28 pb-16 sm:pb-20">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal glass rounded-3xl p-6 sm:p-8">
+            <p class="font-mono text-xs uppercase tracking-[0.22em] text-mint-300">FAQ</p>
+            <div class="mt-6 space-y-3">
+              <details class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <summary class="cursor-pointer font-display text-lg text-white">Does EctoClaw replace OpenClaw?</summary>
+                <p class="mt-2 text-sm text-zinc-300">No. It adds cryptographic auditability to OpenClaw by recording agent activity as immutable events.</p>
+              </details>
+              <details class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <summary class="cursor-pointer font-display text-lg text-white">Can I use it only as an SDK client?</summary>
+                <p class="mt-2 text-sm text-zinc-300">Yes. You can integrate via REST and SDK, use plugin hooks, or run the server and dashboard directly.</p>
+              </details>
+              <details class="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                <summary class="cursor-pointer font-display text-lg text-white">Is EctoClaw only a message recorder?</summary>
+                <p class="mt-2 text-sm text-zinc-300">No. It is an end-to-end audit platform with policy controls, compliance exports, APIs, SDK, and CLI tools.</p>
+              </details>
+            </div>
+          </div>
         </div>
       </section>
     </main>
 
-    <footer class="footer">
-      <p>Copyright © EctoSpace. EctoClaw for OpenClaw ecosystems.</p>
+    <footer class="border-t border-white/10 py-8 text-center text-sm text-zinc-400">
+      Copyright © EctoSpace. EctoClaw for OpenClaw ecosystems.
     </footer>
+  </div>
 
-    <script src="./script.js"></script>
-  </body>
+  <script>
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("show");
+        });
+      },
+      { rootMargin: "0px 0px -70px 0px", threshold: 0 }
+    );
+
+    var subnavSentinel = document.getElementById("subnav-sentinel");
+    var siteHeader = document.getElementById("site-header");
+    if (subnavSentinel && siteHeader) {
+      var syncMergedHeaderState = function (sentinelTop) {
+        var headerBottom = siteHeader.getBoundingClientRect().bottom;
+        var shouldMerge = sentinelTop <= headerBottom;
+        siteHeader.classList.toggle("subnav-merged", shouldMerge);
+      };
+
+      var subnavObserver = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            syncMergedHeaderState(entry.boundingClientRect.top);
+          });
+        },
+        { threshold: [0, 1] }
+      );
+      subnavObserver.observe(subnavSentinel);
+      syncMergedHeaderState(subnavSentinel.getBoundingClientRect().top);
+      window.addEventListener("resize", function () {
+        syncMergedHeaderState(subnavSentinel.getBoundingClientRect().top);
+      });
+      window.addEventListener("scroll", function () {
+        syncMergedHeaderState(subnavSentinel.getBoundingClientRect().top);
+      }, { passive: true });
+    }
+
+    document.querySelectorAll(".reveal").forEach(function (node, index) {
+      node.style.transitionDelay = Math.min(index * 45, 380) + "ms";
+      observer.observe(node);
+    });
+
+    document.getElementById("nav-toggle").addEventListener("click", function () {
+      var nav = document.getElementById("mobile-nav");
+      var iconOpen = document.getElementById("icon-open");
+      var iconClose = document.getElementById("icon-close");
+      nav.classList.toggle("hidden");
+      iconOpen.classList.toggle("hidden");
+      iconClose.classList.toggle("hidden");
+    });
+    document.querySelectorAll("#mobile-nav a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        document.getElementById("mobile-nav").classList.add("hidden");
+        document.getElementById("icon-open").classList.remove("hidden");
+        document.getElementById("icon-close").classList.add("hidden");
+      });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: "dark", themeVariables: { primaryColor: "#0ea5e9", primaryTextColor: "#e2e8f0", primaryBorderColor: "#334155", lineColor: "#64748b", secondaryColor: "#1e293b", tertiaryColor: "#0f172a" } });
+  </script>
+</body>
 </html>
